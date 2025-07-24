@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jadwal Piket Kelas | Minimalis Estetik</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .logo {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      transform: translateY(0);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .logo i {
+      font-size: 50px;
+      color: white;
+    }
+
+    h1 {
+      font-size: 3.5rem;
+      background: linear-gradient(45deg, #6a11cb, #2575fc, #ff8a00);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      letter-spacing: 1px;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: #5a67d8;
+      max-width: 600px;
+      margin: 0 auto;
+      font-weight: 500;
+    }
+
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 30px;
+      perspective: 1000px;
+    }
+
+    .day-card {
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      transition: all 0.4s ease;
+      transform-style: preserve-3d;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      min-height: 320px;
+    }
+
+    .day-card:hover {
+      transform: translateY(-15px) rotateY(5deg) rotateX(5deg);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .day-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 10px;
+      background: linear-gradient(90deg, #6a11cb, #2575fc, #ff8a00);
+    }
+
+    .day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .day-name {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, #2575fc, #6a11cb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .day-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      color: white;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .student-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .student-list {
+      list-style: none;
+      text-align: center;
+    }
+
+    .student-list li {
+      padding: 15px 0;
+      border-bottom: 1px dashed rgba(106, 17, 203, 0.2);
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .student-list li:last-child {
+      border-bottom: none;
+    }
+
+    .student-list li::before {
+      content: '\f007';
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      margin-right: 10px;
+      color: #6a11cb;
+      font-size: 16px;
+    }
+
+    .student-list li:hover {
+      transform: translateX(5px);
+      color: #2575fc;
+    }
+
+    .monday .day-icon {
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+    }
+    .tuesday .day-icon {
+      background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+    }
+    .wednesday .day-icon {
+      background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+    }
+    .thursday .day-icon {
+      background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+    }
+    .friday .day-icon {
+      background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    }
+
+    .today-highlight {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: linear-gradient(45deg, #ff416c, #ff4b2b);
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transform: rotate(15deg);
+      box-shadow: 0 5px 15px rgba(255, 65, 108, 0.3);
+      z-index: 3;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      color: #5a67d8;
+      font-size: 0.9rem;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 20px;
+      backdrop-filter: blur(5px);
+    }
+
+    .floating-objects {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .floating-object {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-20px) rotate(180deg);
+      }
+      100% {
+        transform: translateY(0) rotate(360deg);
+      }
+    }
+
+    .role-tag {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: linear-gradient(45deg, #6a11cb, #2575fc);
+      color: white;
+      padding: 3px 10px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      z-index: 2;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .schedule-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+
+      h1 {
+        font-size: 2.5rem;
+      }
+    }
+
+    /* Animasi untuk kartu hari ini */
+    .today-card {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(106, 17, 203, 0.4);
+      }
+      70% {
+        box-shadow: 0 0 0 15px rgba(106, 17, 203, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(106, 17, 203, 0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Floating objects for background -->
+    <div class="floating-objects">
+      <div class="floating-object" style="width: 100px; height: 100px; background: rgba(106, 17, 203, 0.1); top: 10%; left: 5%; animation-delay: 0s;"></div>
+      <div class="floating-object" style="width: 80px; height: 80px; background: rgba(37, 117, 252, 0.1); top: 70%; left: 90%; animation-delay: 1s;"></div>
+      <div class="floating-object" style="width: 120px; height: 120px; background: rgba(255, 138, 0, 0.1); top: 40%; left: 80%; animation-delay: 2s;"></div>
+      <div class="floating-object" style="width: 60px; height: 60px; background: rgba(255, 65, 108, 0.1); top: 20%; left: 75%; animation-delay: 3s;"></div>
+      <div class="floating-object" style="width: 90px; height: 90px; background: rgba(100, 223, 223, 0.1); top: 85%; left: 15%; animation-delay: 4s;"></div>
+    </div>
+
+    <header>
+      <div class="logo">
+        <i class="fas fa-users"></i>
+      </div>
+      <h1>Jadwal Piket Kelas</h1>
+      <p class="subtitle">
+        "Kebersihan tanggung jawab bersama" - Daftar petugas piket harian
+      </p>
+    </header>
+
+    <div class="schedule-grid">
+      <!-- Senin -->
+      <div class="day-card monday today-card">
+        <div class="today-highlight">
+          HARI INI
+        </div>
+        <div class="role-tag">
+          8 Siswa
+        </div>
+        <div class="day-header">
+          <h2 class="day-name">Senin</h2>
+          <div class="day-icon">
+            <i class="fas fa-sun"></i>
+          </div>
+        </div>
+
+        <div class="student-container">
+          <ul class="student-list">
+            <li>Airin</li>
+            <li>Carlos</li>
+            <li>Kinasih</li>
+            <li>Kaila</li>
+            <li>Radit</li>
+            <li>Rizky</li>
+            <li>Adli</li>
+            <li>Aris</li>
+
+          </ul>
+        </div>
+      </div>
+
+      <!-- Selasa -->
+      <div class="day-card tuesday">
+        <div class="role-tag">
+          7 Siswa
+        </div>
+        <div class="day-header">
+          <h2 class="day-name">Selasa</h2>
+          <div class="day-icon">
+            <i class="fas fa-cloud"></i>
+          </div>
+        </div>
+
+        <div class="student-container">
+          <ul class="student-list">
+            <li>Grisia</li>
+            <li>Melati</li>
+            <li>Intan</li>
+            <li>Sandra</li>
+            <li>Riska</li>
+            <li>Mutia</li>
+            <li>Haris</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Rabu -->
+      <div class="day-card wednesday">
+        <div class="role-tag">
+          7 Siswa
+        </div>
+        <div class="day-header">
+          <h2 class="day-name">Rabu</h2>
+          <div class="day-icon">
+            <i class="fas fa-cloud-sun"></i>
+          </div>
+        </div>
+
+        <div class="student-container">
+          <ul class="student-list">
+            <li>Lala</li>
+            <li>Ulfa</li>
+            <li>Hazriel</li>
+            <li>Wisnu</li>
+            <li>Rexui</li>
+            <li>Fazri</li>
+            <li>Marik</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Kamis -->
+      <div class="day-card thursday">
+        <div class="role-tag">
+          7 Siswa
+        </div>
+        <div class="day-header">
+          <h2 class="day-name">Kamis</h2>
+          <div class="day-icon">
+            <i class="fas fa-cloud-rain"></i>
+          </div>
+        </div>
+
+        <div class="student-container">
+          <ul class="student-list">
+            <li>Anggi</li>
+            <li>Intan</li>
+            <li>Farel</li>
+            <li>Mitzwa</li>
+            <li>Gatan</li>
+            <li>Vandi</li>
+            <li>stepen</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Jumat -->
+      <div class="day-card friday">
+        <div class="role-tag">
+          7 Siswa
+        </div>
+        <div class="day-header">
+          <h2 class="day-name">Jumat</h2>
+          <div class="day-icon">
+            <i class="fas fa-star"></i>
+          </div>
+        </div>
+
+        <div class="student-container">
+          <ul class="student-list">
+            <li>Fiona</li>
+            <li>Faiz</li>
+            <li>Aina</li>
+            <li>Yuni</li>
+            <li>Nadine</li>
+            <li>Krisna</li>
+            <li>Nabila</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>
+        © 2023 Jadwal Piket Kelas X Tkj 1 | SMKN 1 PINOH
+      </p>
+      <p>
+        Desain minimalis dengan fokus pada daftar petugas piket
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    // Add 3D hover effect to cards
+    document.querySelectorAll('.day-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateY = (x - centerX) / 20;
+        const rotateX = (centerY - y) / 20;
+
+        card.style.transform = `translateY(-15px) rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0) rotateY(0) rotateX(0)';
+      });
+    });
+
+    // Set current day highlight
+    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const today = new Date().getDay();
+
+    // Remove existing today highlights
+    document.querySelectorAll('.today-card').forEach(card => {
+      card.classList.remove('today-card');
+      const highlight = card.querySelector('.today-highlight');
+      if (highlight) highlight.remove();
+    });
+
+    // Add highlight to current day
+    if (today >= 1 && today <= 5) {
+      // Monday to Friday
+      const dayCards = document.querySelectorAll('.day-card');
+      dayCards[today-1].classList.add('today-card');
+
+      const highlight = document.createElement('div');
+      highlight.className = 'today-highlight';
+      highlight.textContent = 'HARI INI';
+      dayCards[today-1].appendChild(highlight);
+    }
+  </script>
+</body>
+</html>
